@@ -11,6 +11,7 @@ namespace Напоминалка
 {
     public partial class Form1 : Form
     {
+
         public class MyEvent
         {
             private DateTime DateAndTime;
@@ -52,7 +53,6 @@ namespace Напоминалка
                 sp.SoundLocation = (System.IO.Directory.GetCurrentDirectory()+@"\alarm_clock.wav");
                 sp.Play();
             }
-
             public void sort()
             {
                 for (int i = 0; i < count - 1; i++)
@@ -84,7 +84,6 @@ namespace Напоминалка
                         }
                     }
             }
-
         }
         public Manager managerOfEvent = new Manager();
 
@@ -97,6 +96,11 @@ namespace Напоминалка
         {
             textBox1.Text = managerOfEvent.getActiveCount().ToString();
             label2.Text = DateTime.Now.ToString("HH:mm:ss");
+            for (int i = 0; i < managerOfEvent.count; i++)
+            {
+                dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
+                dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
+            }
             if (this.managerOfEvent.count == 0) return;
             if (this.managerOfEvent.Events[0].GetDateAndTime().Hour == DateTime.Now.Hour && this.managerOfEvent.Events[0].GetDateAndTime().Minute == DateTime.Now.Minute
                 && this.managerOfEvent.Events[0].GetDateAndTime().Date == DateTime.Now.Date && this.managerOfEvent.Events[0].IsActive())
@@ -137,7 +141,6 @@ namespace Напоминалка
 
         private void button2_Click(object sender, EventArgs e)
         {
-            button3.Visible = true;
             button4.Visible = true;
             Height = 480;
             if (managerOfEvent.count == 0)
@@ -159,26 +162,8 @@ namespace Напоминалка
         private void button4_Click(object sender, EventArgs e)
         {
             dataGridView1.Visible = false;
-            button3.Visible = false;
             button4.Visible = false;
             Height = 170;
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (managerOfEvent.count == 0)
-            {
-                return;
-            }
-            else
-            {
-                managerOfEvent.sort();
-                for (int i = 0; i < managerOfEvent.count; i++)
-                {
-                    dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
-                    dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
-                }
-            }
         }
     }
 }
