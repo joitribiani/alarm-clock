@@ -60,16 +60,9 @@ namespace Напоминалка
                     {
                         if (Events[i].GetDateAndTime() > Events[j].GetDateAndTime() || !Events[i].IsActive())
                         {
-                            if (!Events[j].IsActive())
-                            {
-                               int q=2;//важлива змінна, яка нічого не робить, і тим же робить все
-                            }
-                            else
-                            {
                                 MyEvent tmp = Events[i];
                                 Events[i] = Events[j];
                                 Events[j] = tmp;
-                            }
                         }
                     }
                 for (int i = 0; i < count - 1; i++)
@@ -94,12 +87,25 @@ namespace Напоминалка
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            //автоматичне оновлення
             textBox1.Text = managerOfEvent.getActiveCount().ToString();
             label2.Text = DateTime.Now.ToString("HH:mm:ss");
             for (int i = 0; i < managerOfEvent.count; i++)
             {
-                dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
-                dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
+                if (managerOfEvent.Events[i].IsActive() == false)
+                {
+                    dataGridView1.Rows[i + 1].Cells[1].Style.BackColor = Color.DimGray;
+                    dataGridView1.Rows[i + 1].Cells[2].Style.BackColor = Color.DimGray;
+                    dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
+                    dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
+                }
+                else
+                {
+                    dataGridView1.Rows[i + 1].Cells[1].Style.BackColor = Color.White;
+                    dataGridView1.Rows[i + 1].Cells[2].Style.BackColor = Color.White;
+                    dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
+                    dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
+                }
             }
             if (this.managerOfEvent.count == 0) return;
             if (this.managerOfEvent.Events[0].GetDateAndTime().Hour == DateTime.Now.Hour && this.managerOfEvent.Events[0].GetDateAndTime().Minute == DateTime.Now.Minute
@@ -153,8 +159,20 @@ namespace Напоминалка
                 dataGridView1.Visible = true;
                 for (int i = 0; i < managerOfEvent.count; i++)
                 {
-                    dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
-                    dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
+                    if (managerOfEvent.Events[i].IsActive() == false)
+                    {
+                        dataGridView1.Rows[i + 1].Cells[1].Style.BackColor = Color.DimGray;
+                        dataGridView1.Rows[i + 1].Cells[2].Style.BackColor = Color.DimGray;
+                        dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
+                        dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
+                    }
+                    else
+                    {
+                        dataGridView1.Rows[i + 1].Cells[1].Style.BackColor = Color.White;
+                        dataGridView1.Rows[i + 1].Cells[2].Style.BackColor = Color.White;
+                        dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
+                        dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
+                    }
                 }
             }
         }
