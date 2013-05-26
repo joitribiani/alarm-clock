@@ -50,32 +50,33 @@ namespace Напоминалка
             }
             public void playsound()
             {
-                sp.SoundLocation = (System.IO.Directory.GetCurrentDirectory()+@"\alarm_clock.wav");
+                sp.SoundLocation = (System.IO.Directory.GetCurrentDirectory() + @"\alarm_clock.wav");
                 sp.Play();
             }
             public void sort()
             {
+                for (int j = 0; j < count; j++)
                 for (int i = 0; i < count - 1; i++)
-                    for (int j = 1; j < count; j++)
                     {
-                        if (Events[i].GetDateAndTime() > Events[j].GetDateAndTime() || !Events[i].IsActive())
+                        if (Events[i].IsActive()==false ||Events[i].GetDateAndTime() > Events[i+1].GetDateAndTime())
                         {
+                            if(Events[i+1].IsActive())
+                            {
                                 MyEvent tmp = Events[i];
-                                Events[i] = Events[j];
-                                Events[j] = tmp;
+                                Events[i] = Events[i+1];
+                                Events[i+1] = tmp;
+                            }
                         }
                     }
-                for (int i = 0; i < count - 1; i++)
-                    for (int j = 1; j < count; j++)
-                    {
-                        if (DateTime.Compare(Events[i].GetDateAndTime(), Events[j].GetDateAndTime()) > 0 || DateTime.Compare(Events[i].GetDateAndTime(), Events[j].GetDateAndTime()) < 0)
-                            return;
-                        if (DateTime.Compare(Events[i].GetDateAndTime(),Events[j].GetDateAndTime())==0)
-                        {
-                            DateTime d1 = new DateTime(Events[j].GetDateAndTime().Year, Events[j].GetDateAndTime().Month, Events[j].GetDateAndTime().Day, Events[j].GetDateAndTime().Hour, Events[j].GetDateAndTime().Minute, count+1);
-                            Events[j].SetDateAndTime(d1);
-                        }
-                    }
+                   for (int j = 0; j < count; j++)
+                       for (int i = 1; i < count-1; i++)
+                       {
+                           if (DateTime.Compare(Events[i].GetDateAndTime(), Events[i+1].GetDateAndTime()) == 0)
+                           {
+                               DateTime d1 = new DateTime(Events[i+1].GetDateAndTime().Year, Events[i+1].GetDateAndTime().Month, Events[i+1].GetDateAndTime().Day, Events[i+1].GetDateAndTime().Hour, Events[i+1].GetDateAndTime().Minute, count + 1);
+                               Events[i+1].SetDateAndTime(d1);
+                           }
+                       }
             }
         }
         public Manager managerOfEvent = new Manager();
@@ -90,24 +91,15 @@ namespace Напоминалка
             //автоматичне оновлення
             textBox1.Text = managerOfEvent.getActiveCount().ToString();
             label2.Text = DateTime.Now.ToString("HH:mm:ss");
-            for (int i = 0; i < managerOfEvent.count; i++)
+
+            for (int i = 0; i < this.managerOfEvent.count; i++)
             {
-                if (managerOfEvent.Events[i].IsActive() == false)
-                {
-                    dataGridView1.Rows[i + 1].Cells[1].Style.BackColor = Color.DimGray;
-                    dataGridView1.Rows[i + 1].Cells[2].Style.BackColor = Color.DimGray;
-                    dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
-                    dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
-                }
-                else
-                {
-                    dataGridView1.Rows[i + 1].Cells[1].Style.BackColor = Color.White;
-                    dataGridView1.Rows[i + 1].Cells[2].Style.BackColor = Color.White;
-                    dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
-                    dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
-                }
+                dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
+                dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
             }
+
             if (this.managerOfEvent.count == 0) return;
+
             if (this.managerOfEvent.Events[0].GetDateAndTime().Hour == DateTime.Now.Hour && this.managerOfEvent.Events[0].GetDateAndTime().Minute == DateTime.Now.Minute
                 && this.managerOfEvent.Events[0].GetDateAndTime().Date == DateTime.Now.Date && this.managerOfEvent.Events[0].IsActive())
             {
@@ -118,8 +110,8 @@ namespace Напоминалка
                 {
                     managerOfEvent.sp.Stop();
                 }
-                this.managerOfEvent.sort();
             }
+            this.managerOfEvent.sort();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -159,20 +151,8 @@ namespace Напоминалка
                 dataGridView1.Visible = true;
                 for (int i = 0; i < managerOfEvent.count; i++)
                 {
-                    if (managerOfEvent.Events[i].IsActive() == false)
-                    {
-                        dataGridView1.Rows[i + 1].Cells[1].Style.BackColor = Color.DimGray;
-                        dataGridView1.Rows[i + 1].Cells[2].Style.BackColor = Color.DimGray;
-                        dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
-                        dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
-                    }
-                    else
-                    {
-                        dataGridView1.Rows[i + 1].Cells[1].Style.BackColor = Color.White;
-                        dataGridView1.Rows[i + 1].Cells[2].Style.BackColor = Color.White;
-                        dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
-                        dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
-                    }
+                    dataGridView1.Rows[i + 1].Cells[1].Value = Convert.ToString(managerOfEvent.Events[i].GetDateAndTime());
+                    dataGridView1.Rows[i + 1].Cells[2].Value = Convert.ToString(managerOfEvent.Events[i].GetMessage());
                 }
             }
         }
