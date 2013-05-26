@@ -68,15 +68,6 @@ namespace Напоминалка
                             }
                         }
                     }
-                for (int j = 0; j < count; j++)
-                    for (int i = 1; i < count - 1; i++)
-                    {
-                        if (DateTime.Compare(Events[i].GetDateAndTime(), Events[i + 1].GetDateAndTime()) == 0)
-                        {
-                            DateTime d1 = new DateTime(Events[i + 1].GetDateAndTime().Year, Events[i + 1].GetDateAndTime().Month, Events[i + 1].GetDateAndTime().Day, Events[i + 1].GetDateAndTime().Hour, Events[i + 1].GetDateAndTime().Minute, count + 1);
-                            Events[i + 1].SetDateAndTime(d1);
-                        }
-                    }
             }
         }
         public Manager managerOfEvent = new Manager();
