@@ -20,7 +20,7 @@ namespace Напоминалка
         {
             if (((Form1)this.Owner).managerOfEvent.count > 9)
             {
-                DialogResult result1 = MessageBox.Show("Ви ствроили більше 10 нагадувань. Якщо кількість в полі ''Активні нагадування'' < 10, можливо деякі події вже минули.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult result1 = MessageBox.Show("Ви ствроили більше 10 нагадувань. Якщо кількість в полі ''Активні нагадування'' < 10, можливо деякі події вже минули.", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 if (result1 == DialogResult.OK)
                 {
                     this.Close();
@@ -36,15 +36,27 @@ namespace Напоминалка
                 Iminute = Convert.ToInt32(numericUpDown2.Value);
 
                 DateTime date1 = new DateTime(Iyear, Imonth, Idate, Ihour, Iminute, 0);
-                if (DateTime.Compare(date1, DateTime.Now) < 0)
+                for (int i = 0; i < ((Form1)this.Owner).managerOfEvent.count; i++)
                 {
-                    DialogResult result2 = MessageBox.Show("Дане нагадування знаходиться в минулому часі, дана подія не буде додана", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    if (result2 == DialogResult.OK)
+                    if (date1 ==((Form1)this.Owner).managerOfEvent.Events[i].GetDateAndTime())
                     {
-                        this.Close();
-                        return;
+                        DialogResult result2 = MessageBox.Show("Подія на даний час уже зареєстрована.", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        if (result2 == DialogResult.OK)
+                        {
+                            this.Close();
+                            return;
+                        }
                     }
                 }
+                    if (DateTime.Compare(date1, DateTime.Now) < 0)
+                    {
+                        DialogResult result2 = MessageBox.Show("Дане нагадування знаходиться в минулому часі, дана подія не буде додана", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        if (result2 == DialogResult.OK)
+                        {
+                            this.Close();
+                            return;
+                        }
+                    }
                 // Adding new event
                 ((Form1)this.Owner).managerOfEvent.Events[((Form1)this.Owner).managerOfEvent.count++] = new Form1.MyEvent(date1, this.textBox1.Text);
 
